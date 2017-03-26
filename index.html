@@ -1,31 +1,61 @@
 <html>
+	<head>
+		<title>graph test</title>
+	</head>
 	<body>
-		<head>
-			<title>graph test</title>
-		</head>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v3.min.js"></script>
 		<script src="static/js/epoch.min.js"></script>
+		<script src="static/js/smoothie.js"></script>
 		<link rel="stylesheet" type="text/css" href="static/css/epoch.min.css">
 	
-		<h1>Real time chart</h1>
+		<h1>Epoch charting 1</h1>
 		<div id="lineChart" class="epoch category10" style="width: 800px; height: 200px"></div>
+	<style> /*
+		<h1>Epoch charting 2</h1>
+		<div id="lineChart2" class="epoch category10" style="width: 800px; height: 200px"></div>
+	*/</style>
+		<h1>Smoothie Chart</h1>
+    <canvas id="mycanvas" width="800" height="200"></canvas>
 		<script type="text/javascript">
 			var ws = new WebSocket("ws://localhost:8000/publish");
 			var lineChartData = [
 					{ label: "Series 1", values: [] },
 					{ label: "Series 2", values: [] },
 				];
+			/*
+			var lineChartData2 = [
+					{ label: "Series 1", values: [] },
+					{ label: "Series 2", values: [] },
+				];
+			*/
 			var lineChart = $('#lineChart').epoch({
 					type: 'time.line',
 					data: lineChartData,
 					axes: ['left', 'right', 'bottom']
 				});
+			/*
+			var lineChart2 = $('#lineChart2').epoch({
+					type: 'time.line',
+					data: lineChartData2,
+					axes: ['left', 'right', 'bottom']
+				});
+			*/
 			ws.onmessage = function(msg) {
-					var current = JSON.parse(msg.data);
-					lineChart.push(current);
+					current = JSON.parse(msg.data);
+					lineChart.push(current["data1"]);
+					//lineChart2.push(current["data2"]);
+					line1.append(new Date().getTime(), current["data1"][0]["y"]);
+					line2.append(new Date().getTime(), current["data1"][1]["y"]);
 				};
-			
+			var line1 = new TimeSeries();
+			var line2 = new TimeSeries();
+			var smoothie = new SmoothieChart({timestampFormatter:SmoothieChart.timeFormatter});
+			//var smoothie = new SmoothieChart({ grid: { strokeStyle: 'rgb(125, 0, 0)', fillStyle: 'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6 } });
+				smoothie.addTimeSeries(line1, { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 3 });
+				smoothie.addTimeSeries(line2, { strokeStyle: 'rgb(255, 0, 255)', fillStyle: 'rgba(255, 0, 255, 0.3)', lineWidth: 3 });
+				smoothie.streamTo(document.getElementById("mycanvas"), 1000);
+
 		</script>
 	</body>
 </html>

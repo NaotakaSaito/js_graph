@@ -19,8 +19,8 @@ def publish():
         ws = request.environ['wsgi.websocket']
         while True:
             t = int(time.mktime(datetime.datetime.now().timetuple()))
-            ws.send(json.dumps([{"time": t, "y": random.random() * 1000},
-                                {"time": t, "y": random.random() * 1000}]))
+            ws.send(json.dumps({"data1": [{"time": t, "y": random.random() * 1000},{"time": t, "y": random.random() * 1000}],
+                                "data2": [{"time": t, "y": random.random() * 1000},{"time": t, "y": random.random() * 1000}]}))
             time.sleep(1)
     return
 
