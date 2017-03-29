@@ -43,13 +43,13 @@ EM::run do
 	EM::defer do
 		loop do
 			t = Time.now.to_i
-			@channel.push (({
-				"data1":[{ "time": t,"y":rand(1000)},
-						 { "time": t,"y":rand(1000)}],
-				"data2":[{ "time": t,"y":rand(1000)},
-						{"time": t,"y":rand(1000)}]
-			}).to_json)
-			sleep 1
+			@channel.push (JSON.generate({
+				"data1" => [{ "time" => t,"y"=>rand(1000)},
+						{ "time" => t,"y"=>rand(1000)}],
+				"data2" => [{ "time"=> t,"y"=>rand(1000)},
+						{"time"=> t,"y"=>rand(1000)}]
+			}))
+			sleep(1)
 		end
 	end
 
