@@ -1,0 +1,10 @@
+sudo apt-get install python-dev
+sudo pip install gevent gevent-websocket
+
+sudo apt-get install ruby-dev
+sudo gem install em-websocket
+
+cd ~/.node-red
+npm install node-red-dashboard
+
+
